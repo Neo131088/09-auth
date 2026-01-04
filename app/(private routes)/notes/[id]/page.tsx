@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { QueryClient, HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { fetchNoteById } from "@/lib/api/serverApi";
 import NoteDetails from "./NoteDetails.client"; // 🔹 локальний імпорт
