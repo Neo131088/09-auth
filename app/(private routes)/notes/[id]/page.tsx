@@ -1,14 +1,15 @@
 import { Metadata } from "next";
 import { QueryClient, HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { fetchNoteById } from "@/lib/api/serverApi";
-import NoteDetails from "./NoteDetails.client"; // 🔹 шлях до клієнтського компоненту
+import NoteDetails from "./NoteDetails.client"; // 🔹 імпорт локальний
 
 interface NotePageProps {
   params: { id: string };
 }
 
+// Генерація мета-даних для SEO та OpenGraph
 export async function generateMetadata({ params }: NotePageProps): Promise<Metadata> {
-  const { id } = params; // 🔹 params не Promise
+  const { id } = params;
   const note = await fetchNoteById(id);
 
   return {
@@ -17,7 +18,7 @@ export async function generateMetadata({ params }: NotePageProps): Promise<Metad
     openGraph: {
       title: note.title,
       description: note.content,
-      url: `https://08-zustand-five-phi.vercel.app/notes/${note.id}`,
+      url: `https://yourdomain.com/notes/${note.id}`,
       images: [
         {
           url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
@@ -30,8 +31,9 @@ export async function generateMetadata({ params }: NotePageProps): Promise<Metad
   };
 }
 
+// Серверна сторінка, яка робить prefetchQuery для React Query
 async function NotePage({ params }: NotePageProps) {
-  const { id } = params; // 🔹 синхронно
+  const { id } = params;
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
