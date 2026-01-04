@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import css from "./Edit.module.css";
+import css from "./EditProfile.module.css";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAuthStore } from "@/lib/store/authStore";
