@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import css from "./LayoutNotes.module.css";
 
 type NotesLayoutProps = {
