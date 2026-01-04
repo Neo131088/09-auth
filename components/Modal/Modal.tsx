@@ -1,6 +1,8 @@
-import css from "./Modal.module.css";
-import { createPortal } from "react-dom";
-import { useEffect } from "react";
+'use client';
+
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+import css from './Modal.module.css';
 
 interface ModalProps {
   children: React.ReactNode;
@@ -8,18 +10,23 @@ interface ModalProps {
 }
 
 export default function Modal({ children, onClose }: ModalProps) {
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
+    setMounted(true);
+
     const onEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         onClose();
       }
     };
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onEscape);
+
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onEscape);
 
     return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", onEscape);
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onEscape);
     };
   }, [onClose]);
 
@@ -28,6 +35,12 @@ export default function Modal({ children, onClose }: ModalProps) {
       onClose();
     }
   };
+
+ 
+  if (!mounted) {
+    return null;
+  }
+
   return createPortal(
     <div
       className={css.backdrop}
