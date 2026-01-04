@@ -1,4 +1,4 @@
-import css from "./Sidebar.module.css";
+import css from "./SideBar.module.css";
 import Link from "next/link";
 
 function SidebarNotes() {
