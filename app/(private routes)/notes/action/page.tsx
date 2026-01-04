@@ -1,6 +1,6 @@
 import NoteForm from "@/components/NoteForm/NoteForm";
 import React from "react";
-import css from "./CreateNote.module.css";
+import css from "./create/CreateNote.module.css";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
