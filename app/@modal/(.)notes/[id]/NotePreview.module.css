@@ -1,96 +1,75 @@
+.main {
+    flex: 1;
+}
+
 .container {
     max-width: 800px;
     margin: 32px auto;
-    padding: 28px;
+    padding: 24px;
     background-color: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.container:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .item {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #f2f2f2;
-    padding-bottom: 12px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 8px;
 }
 
 .header h2 {
     margin: 0;
     font-size: 28px;
-    font-weight: 600;
-    color: #2d2d2d;
+    color: #333;
 }
 
 .content {
     font-size: 18px;
-    line-height: 1.7;
+    line-height: 26px;
     color: #444;
     white-space: pre-wrap;
 }
 
 .date {
     font-size: 14px;
-    color: #9a9a9a;
+    color: #888;
     text-align: right;
-    font-style: italic;
 }
 
 .tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    font-size: 13px;
-    font-weight: 500;
-    color: #2a5d9f;
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 12px;
+    color: #0d6efd;
     background-color: #e7f1ff;
-    border: 1px solid #c5dcfa;
-    border-radius: 20px;
-    max-width: 120px;
+    border: 1px solid #b6d4fe;
+    border-radius: 12px;
+    max-width: 100px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    transition: all 0.2s ease;
 }
 
-.tag:hover {
-    background-color: #d6e7ff;
-    color: #1f4a7c;
-}
-
-.backBtn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    align-self: flex-start;
-    padding: 8px 14px;
+.button {
+    align-self: flex-end;
+    padding: 6px 12px;
     font-size: 14px;
-    font-weight: 500;
-    color: #2a5d9f;
-    background-color: #e7f1ff;
-    border: 1px solid #c5dcfa;
-    border-radius: 8px;
+    color: #fff;
+    background-color: #dc3545;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
-    text-decoration: none;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease;
 }
 
-.backBtn:hover {
-    background-color: #d6e7ff;
-    color: #1f4a7c;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+.button:hover {
+    background-color: #bb2d3b;
 }

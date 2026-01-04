@@ -1,51 +1,50 @@
 "use client";
+
+// import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
-import Loader from "@/components/Loader/Loader";
-import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
-import css from "./NotePreview.module.css";
-import { useRouter } from "next/navigation";
+import { fetchNoteById } from "@/lib/api/clientApi";
 import Modal from "@/components/Modal/Modal";
-import { fetchNoteById } from "@/lib/api//clientApi";
-const NotePreview = () => {
-  const router = useRouter();
+import css from "./NotePreview.module.css";
+
+function NotePreviewClient() {
   const { id } = useParams<{ id: string }>();
-  console.log(id);
-  const { data, isLoading, isError } = useQuery({
+  const router = useRouter();
+  const closeModal = () => router.back();
+
+  const {
+    data: note,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["note", id],
     queryFn: () => fetchNoteById(id),
     refetchOnMount: false,
   });
 
-  const handleClick = () => {
-    router.back();
-  };
-
-  const formattedDate = data
-    ? data.updatedAt
-      ? `Updated at: ${data.updatedAt}`
-      : `Created at: ${data.createdAt}`
-    : "";
-
-  if (isLoading) return <Loader />;
-  if (isError) return <ErrorMessage />;
-  if (!data) return null;
   return (
-    <Modal onClose={handleClick}>
-      <div className={css.container}>
-        <div className={css.item}>
-          <div className={css.header}>
-            <button onClick={handleClick} className={css.backBtn}>
-              Go Back
+    <>
+      {isLoading && <p>Loading, please wait...</p>}
+      {error || !note ? (
+        <p>Something went wrong.</p>
+      ) : (
+        <Modal onClose={closeModal}>
+          <div className={css.container}>
+            <div className={css.item}>
+              <div className={css.header}>
+                <h2>{note?.title}</h2>
+              </div>
+              <p className={css.content}>{note?.content}</p>
+              <p className={css.date}>{note?.createdAt}</p>
+            </div>
+            <button className={css.button} onClick={closeModal} type="button">
+              Close
             </button>
-            <h2>{data.title}</h2>
           </div>
-          <p className={css.content}>{data.content}</p>
-          <p className={css.date}>{formattedDate}</p>
-        </div>
-      </div>
-    </Modal>
+        </Modal>
+      )}
+    </>
   );
-};
+}
 
-export default NotePreview;
+export default NotePreviewClient;

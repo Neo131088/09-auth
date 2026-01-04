@@ -1,56 +1,47 @@
-import Image from "next/image";
-
-import css from "./Profile.module.css";
-import { getServerMe } from "@/lib/api//serverApi";
 import Link from "next/link";
+import Image from "next/image";
 import { Metadata } from "next";
+import css from "./Profile.module.css";
+import { getMe } from "@/lib/api/serverApi";
 
 export const metadata: Metadata = {
-  title: "Edit your Profile",
-  description: "Here you can edit your profile.",
+  title: "User profile",
+  description: "Profile page with user information",
   openGraph: {
-    title: "Edit your Profile",
-    description: "Here you can edit your profile.",
-    url: "https://08-zustand-two-pi.vercel.app/profile/edit",
-    images: [
-      {
-        url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Notehub",
-      },
-    ],
+    title: "User profile",
+    description: "Profile page with user information",
   },
 };
 
-const Profile = async () => {
-  const user = await getServerMe();
-
+async function Profile() {
+  const user = await getMe();
   return (
-    <main className={css.mainContent}>
-      <div className={css.profileCard}>
-        <div className={css.header}>
-          <h1 className={css.formTitle}>Profile Page</h1>
-          <Link className={css.editProfileButton} href="/profile/edit">
-            Edit Profile
-          </Link>
+    <>
+      <main className={css.mainContent}>
+        <div className={css.profileCard}>
+          <div className={css.header}>
+            <h1 className={css.formTitle}>Profile Page</h1>
+            <Link href="/profile/edit" className={css.editProfileButton}>
+              Edit Profile
+            </Link>
+          </div>
+          <div className={css.avatarWrapper}>
+            <Image
+              src={user.avatar}
+              alt="User Avatar"
+              width={120}
+              height={120}
+              className={css.avatar}
+            />
+          </div>
+          <div className={css.profileInfo}>
+            <p>Username: {user.username}</p>
+            <p>Email: {user.email}</p>
+          </div>
         </div>
-        <div className={css.avatarWrapper}>
-          <Image
-            src={user.avatar}
-            alt="User Avatar"
-            width={120}
-            height={120}
-            className={css.avatar}
-          />
-        </div>
-        <div className={css.profileInfo}>
-          <p>Username: {user.username}</p>
-          <p>Email: {user.email}</p>
-        </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
-};
+}
 
 export default Profile;

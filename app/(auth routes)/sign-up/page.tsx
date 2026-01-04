@@ -1,85 +1,74 @@
 "use client";
-import Link from "next/link";
-import { useState } from "react";
+
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { ApiError } from "@/app/api/api";
+import { useState } from "react";
+import { useAuthStore } from "@/lib/store/authStore";
+import { register } from "@/lib/api/clientApi";
 import css from "./SignUp.module.css";
-import { useAuth } from "@/lib/store/authStore";
-import { register, RegisterRequest } from "@/lib/api/clientApi";
-const SignUp = () => {
+
+function SignUp() {
+  const setUser = useAuthStore((state) => state.setUser);
   const router = useRouter();
   const [error, setError] = useState("");
-  const { setUser } = useAuth();
 
-  const handleSubmit = async (formData: FormData) => {
-    try {
-      const formValues = Object.fromEntries(
-        formData
-      ) as unknown as RegisterRequest;
-      const response = await register(formValues);
+  const { mutate, isPending } = useMutation({
+    mutationFn: register,
+    onSuccess: (data) => {
+      setUser(data);
+      router.push("/profile");
+    },
+    onError: () => {
+      setError("Invalid email or password");
+    },
+  });
 
-      if (response) {
-        setUser(response);
-        router.replace("/profile");
-      } else {
-        setError("Invalid email or password");
-      }
-    } catch (error) {
-      setError(
-        (error as ApiError).response?.data?.error ??
-          (error as ApiError).message ??
-          "Whoops...some error"
-      );
-    }
+  const handleSubmit = (formData: FormData) => {
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    mutate({ email, password });
   };
+
   return (
-    <>
-      <main className={css.mainContent}>
-        <form className={css.form} action={handleSubmit}>
-          <h1 className={css.formTitle}>Sign up</h1>
-          <p>Sign up now and start exploring our app!</p>
-          <div className={css.formGroup}>
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              name="email"
-              placeholder="yourmail@gmail.com"
-              className={css.input}
-              required
-            />
-          </div>
+    <main className={css.mainContent}>
+      <h1 className={css.formTitle}>Sign up</h1>
+      <form className={css.form} action={handleSubmit}>
+        <div className={css.formGroup}>
+          <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            className={css.input}
+            required
+          />
+        </div>
 
-          <div className={css.formGroup}>
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              name="password"
-              placeholder="********"
-              className={css.input}
-              required
-            />
-          </div>
+        <div className={css.formGroup}>
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            className={css.input}
+            required
+          />
+        </div>
 
-          <div className={css.actions}>
-            <button type="submit" className={css.submitButton}>
-              Register
-            </button>
-          </div>
+        <div className={css.actions}>
+          <button
+            type="submit"
+            className={css.submitButton}
+            disabled={isPending}
+          >
+            Register
+          </button>
+        </div>
 
-          {error && <p className={css.error}>{error}</p>}
-
-          <p className={css.signInText}>
-            Do you already have an account?
-          </p>
-          <p>
-            <Link href="/sign-in">Sign In</Link>
-          </p>
-        </form>
-      </main>
-    </>
+        {error && <p className={css.error}>{error}</p>}
+      </form>
+    </main>
   );
-};
+}
 
 export default SignUp;

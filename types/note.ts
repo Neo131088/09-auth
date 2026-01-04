@@ -1,40 +1,16 @@
-// types/note.ts
+export type NoteTag = "Work" | "Personal" | "Meeting" | "Shopping" | "Todo";
+
 export interface Note {
-  id: string;
-  title: string;
   content: string;
-  tag: Tag;
   createdAt: string;
+  id: string;
+  tag: NoteTag;
+  title: string;
   updatedAt: string;
 }
 
-export type Tag =
-  | "Todo"
-  | "Work"
-  | "Personal"
-  | "Meeting"
-  | "Shopping"
-  | "Ideas"
-  | "Travel"
-  | "Finance"
-  | "Health"
-  | "Important";
-
-export const tagList: Tag[] = [
-  "Todo",
-  "Work",
-  "Personal",
-  "Meeting",
-  "Shopping",
-  "Ideas",
-  "Travel",
-  "Finance",
-  "Health",
-  "Important",
-];
-
-export interface NoteDraft {
-  title?: string;
+export interface NewNote {
+  title: string;
   content?: string;
-  tag?: Tag;
+  tag: NoteTag;
 }

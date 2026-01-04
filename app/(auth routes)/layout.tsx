@@ -1,17 +1,19 @@
 "use client";
+
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import React, { ReactNode, useEffect } from "react";
 
 type Props = {
-  children: ReactNode;
+  children: React.ReactNode;
 };
 
-export default function AuthLayout({ children }: Props) {
+export default function PublicLayout({ children }: Props) {
   const router = useRouter();
 
   useEffect(() => {
+    // refresh викличе перезавантаження даних
     router.refresh();
   }, [router]);
 
-  return <div>{children}</div>;
+  return <>{children}</>;
 }

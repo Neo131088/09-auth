@@ -1,47 +1,42 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
-import Loader from "@/components/Loader/Loader";
-import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
-import css from "./NoteDetails.module.css";
-import { useRouter } from "next/navigation";
-import { fetchNoteById } from "@/lib/api/clientApi";
 
-const NoteDetails = () => {
+// import { useState } from "react";
+import { useParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { fetchNoteById } from "@/lib/api/clientApi";
+import css from "./NoteDetails.client.module.css";
+
+function NoteDetails() {
   const { id } = useParams<{ id: string }>();
-  const { data, isLoading, isError } = useQuery({
+
+  const {
+    data: note,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["note", id],
     queryFn: () => fetchNoteById(id),
     refetchOnMount: false,
   });
 
-  const router = useRouter();
-
-  const handleClick = () => {
-    router.back();
-  };
-
-  const formattedDate = data
-    ? data.updatedAt
-      ? `Updated at: ${data.updatedAt}`
-      : `Created at: ${data.createdAt}`
-    : "";
-
-  if (isLoading) return <Loader />;
-  if (isError) return <ErrorMessage />;
-  if (!data) return null;
   return (
-    <div className={css.container}>
-      <div className={css.item}>
-        <div className={css.header}>
-          <button onClick={handleClick}>Go Back</button>
-          <h2>{data.title}</h2>
+    <>
+      {isLoading && <p>Loading, please wait...</p>}
+      {error || !note ? (
+        <p>Something went wrong.</p>
+      ) : (
+        <div className={css.container}>
+          <div className={css.item}>
+            <div className={css.header}>
+              <h2>{note?.title}</h2>
+            </div>
+            <p className={css.content}>{note?.content}</p>
+            <p className={css.date}>{note?.createdAt}</p>
+          </div>
         </div>
-        <p className={css.content}>{data.content}</p>
-        <p className={css.date}>{formattedDate}</p>
-      </div>
-    </div>
+      )}
+    </>
   );
-};
+}
 
 export default NoteDetails;

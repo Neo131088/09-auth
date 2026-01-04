@@ -1,64 +1,63 @@
 "use client";
+
 import Image from "next/image";
-import css from "./EditProfile.module.css";
-import { useEffect, useState } from "react";
-import { getMe, patchMe } from "@/lib/api//clientApi";
+import css from "./Edit.module.css";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/lib/store/authStore";
+import { useState } from "react";
+import { useAuthStore } from "@/lib/store/authStore";
+import { patchMe } from "@/lib/api/clientApi";
 
-const EditPage = () => {
-  const [username, setUsername] = useState("");
+function Edit() {
   const router = useRouter();
-  const { setUser, user } = useAuth();
-  useEffect(() => {
-    const fetchUser = async () => {
-      const data = await getMe();
-      setUser(data);
-      setUsername(data.username);
-    };
-    fetchUser();
-  }, [setUser]);
+  const { user, setUser } = useAuthStore();
+  const [userName, setUserName] = useState(user?.username);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!user) return;
-    try {
-      await patchMe({ username });
-      const updatedUser = await getMe();
-      setUser(updatedUser);
-      router.push("/profile");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  if (!user) {
+    router.push("/sign-in");
+    return null;
+  }
 
-  const handleClick = () => {
+  const handleSubmit = async (formData: FormData) => {
+    const newUserName = formData.get("username") as string;
+    const updateUser = await patchMe({ username: newUserName });
+    setUser(updateUser);
     router.push("/profile");
   };
 
-  if (!user) return <p>Loading...</p>;
+  const handleCancel = () => {
+    router.push("/profile");
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUserName(event.target.value);
+    console.log(event.target.value);
+  };
+
   return (
     <main className={css.mainContent}>
       <div className={css.profileCard}>
         <h1 className={css.formTitle}>Edit Profile</h1>
 
-        <Image
-          src={user.avatar}
-          alt="User Avatar"
-          width={120}
-          height={120}
-          className={css.avatar}
-        />
+        {user.avatar && (
+          <Image
+            src={user.avatar}
+            alt="User Avatar"
+            width={120}
+            height={120}
+            className={css.avatar}
+          />
+        )}
 
-        <form className={css.profileInfo} onSubmit={handleSubmit}>
+        <form className={css.profileInfo} action={handleSubmit}>
           <div className={css.usernameWrapper}>
-            <label htmlFor="username">Username: </label>
+            <label htmlFor="username">Username:</label>
             <input
               id="username"
+              name="username"
               type="text"
-              value={username}
+              value={userName}
               className={css.input}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={handleChange}
             />
           </div>
 
@@ -71,7 +70,7 @@ const EditPage = () => {
             <button
               type="button"
               className={css.cancelButton}
-              onClick={handleClick}
+              onClick={handleCancel}
             >
               Cancel
             </button>
@@ -80,6 +79,6 @@ const EditPage = () => {
       </div>
     </main>
   );
-};
+}
 
-export default EditPage;
+export default Edit;

@@ -1,16 +1,7 @@
 "use client";
 
-interface ErrorProps {
-  error: Error;
+function ErrorNote({ error }: { error: Error }) {
+  return <p>Could not fetch note details. {error.message}</p>;
 }
-
-const ErrorNote = ({ error }: ErrorProps) => {
-  return (
-    <div>
-      <p>Could not fetch note details. </p>
-      <p>{error.message}</p>
-    </div>
-  );
-};
 
 export default ErrorNote;

@@ -1,5 +1,5 @@
-export default interface User {
-  email: string;
+export type User = {
   username: string;
+  email: string;
   avatar: string;
-}
+};
